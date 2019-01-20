@@ -1,0 +1,81 @@
+# author Aaron Bape
+import time
+import os
+import shutil
+import datetime
+'''
+nowtime = time.strftime('%Y%m%d')
+print(nowtime)
+usetime = int(nowtime) - 15
+print(usetime)'''
+nowtime = time.strftime('%Y%m%d')
+nowtime1 = datetime.date.today()
+print(nowtime1)
+usetime = nowtime1 + datetime.timedelta(-10)
+print(usetime)
+
+
+def log(message):
+    dir = os.path.dirname(os.path.realpath(__file__))
+    with open(os.path.join(dir, 'log', 'move.log'), 'a') as fh:
+        fh.write(datetime.datetime.now().strftime('%Y%m%d %H:%M:%S') + '	' + message + "\n")
+
+#def listdir(source,target):
+#x = ('C:\\test')
+#Y = ("D:\\")
+#dirs = x.split(':\\')
+#print(dirs)
+
+'''for dirpath,dirnames,filenames in os.walk(x):
+    print(dirpath)
+    print(dirnames)
+    print(filenames)'''
+def func(x,Y):
+    dirs = x.split(':\\')
+    for i in os.listdir(x):
+        #print(i)
+        dir_path = os.path.join(x,i)
+        #print(file_path)
+        if os.path.isdir(dir_path):
+            #print(dir_path)
+            dir_name = os.path.join(dir_path)
+            #print(dir_name)
+            dirtime = time.strftime("%Y-%m-%d", time.localtime(os.path.getmtime(dir_name)))
+            #print(dirtime)
+            if dirtime < str(usetime) :
+                try:
+                    shutil.move(dir_name, os.path.join(Y + dirs[0] + '盘' + nowtime + dirs[1]))
+                except Exception as e:
+                    log('Detail message1:%s'%str(e))
+            else :
+                print('have no dir can move')
+            print('1 dir aleard move' )
+            #for
+        elif os.path.isfile(os.path.join(x, i)):
+            #os.makedirs(Y + dirs[0] + '盘' + nowtime + dirs[1])
+            file_name = os.path.join(x, i)
+            #print(file_path)
+            #print(Y + dirs[0] + '盘' + nowtime + dirs[1])
+            if os.path.exists(Y + dirs[0] + '盘' + nowtime + dirs[1]):
+                #print('0')
+                filetime = time.strftime("%Y-%m-%d", time.localtime(os.path.getmtime(os.path.join(x, i))))
+                #print(filetime)
+                if filetime < str(usetime) :
+                    try:
+                        shutil.move(os.path.join(file_name), os.path.join(Y + dirs[0] + '盘' + nowtime + dirs[1]))
+                    except Exception as e:
+                        log('Detail message2:%s'%str(e))
+                else :
+                    print('no file can move')
+            else :
+                #print('1')
+                os.makedirs(Y + dirs[0] + '盘' + nowtime + dirs[1])
+                filetime = time.strftime("%Y%m%d", time.localtime(os.path.getmtime(os.path.join(x, i))))
+                if filetime < str(usetime) :
+                    try:
+                        shutil.move(os.path.join(file_name), os.path.join(Y + dirs[0] + '盘' + nowtime + dirs[1]))
+                    except Exception as e:
+                        log('Detail message: %s'%str(e))
+        else:
+            print('file move')
+
